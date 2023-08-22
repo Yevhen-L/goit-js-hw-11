@@ -81,6 +81,7 @@ function displayImages(images) {
   // updateGalary-----------------------------------
   lightbox.refresh();
 }
+
 // --------------------------------------------------
 searchForm.addEventListener("submit", async event => {
   event.preventDefault();
@@ -101,8 +102,7 @@ loadMoreBtn.addEventListener("click", async () => {
   if (currentPage * 40 >= totalHits) {
     Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
     return;
-  
-  }
+    }
   currentPage++;
   const { hits } = await fetchImages(currentQuery, currentPage);
   displayImages(hits);
