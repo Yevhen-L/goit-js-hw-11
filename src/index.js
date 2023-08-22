@@ -2,6 +2,7 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+
 const searchForm = document.querySelector("#search-form");
 const gallery = document.querySelector(".gallery");
 const loadMoreBtn = document.querySelector(".load-more");
@@ -10,9 +11,8 @@ const apiKey = "38983317-2cdf068ca906dc85bbb8e8b48"; //ключ
 let currentPage = 1;
 let currentQuery = "";
 
-const lightbox = new SimpleLightbox(".photo-card a");
 
-// Функція для отримання зображень з сервера
+// picturesFromServer------------------------------
 async function fetchImages(query, page = 1) {
   try {
     const response = await axios.get("https://pixabay.com/api/", {
@@ -32,8 +32,15 @@ async function fetchImages(query, page = 1) {
     console.error("Error fetching images:", error);
   }
 }
+const lightbox = new SimpleLightbox(".photo-card a",
+{
+  caption: 'true',
+  captionsData: "alt",
+  captionPosition: "bottom",
+  captionDelay: '250'
+  });
 
-// Функція для відображення зображень
+// picturesFunction--------------------------
 function displayImages(images) {
   gallery.innerHTML = "";
 
@@ -72,11 +79,11 @@ function displayImages(images) {
     gallery.appendChild(card);
   });
 
-  // Оновлення галереї після додавання нових зображень
+  // updateGalary-----------------------------------
   lightbox.refresh();
 }
 
-// Обробник події подачі форми
+// --------------------------------------------------
 searchForm.addEventListener("submit", async event => {
   event.preventDefault();
   
@@ -99,15 +106,14 @@ searchForm.addEventListener("submit", async event => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// Обробник події кнопки "Load more"
+// Button(Load more)----------------------------------------
 loadMoreBtn.addEventListener("click", async () => {
   currentPage++;
   const { hits } = await fetchImages(currentQuery, currentPage);
   displayImages(hits);
   window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
 });
-
-// Відправка запиту за зображеннями при завантаженні сторінки
+// request--------------------------------------------------
 fetchImages("initial search term").then(response => {
   displayImages(response.hits);
   loadMoreBtn.style.display = "none";
