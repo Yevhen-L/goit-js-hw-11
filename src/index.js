@@ -108,7 +108,18 @@ searchForm.addEventListener("submit", async event => {
   loadMoreBtn.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-
+loadMoreBtn.addEventListener("click", async () => {
+  if (currentPage * 40 >= totalHits) {
+    Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+    return;
+  
+  }
+  currentPage++;
+  const { hits } = await fetchImages(currentQuery, currentPage);
+  displayImages(hits);
+  window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
+});
+ 
 // Button(Load more)----------------------------------------
 // loadMoreBtn.addEventListener("click", async () => {
 //     currentPage++;
@@ -121,17 +132,3 @@ searchForm.addEventListener("submit", async event => {
 //   displayImages(response.hits);
 //   loadMoreBtn.style.display = "none";
 // });
-
-loadMoreBtn.addEventListener("click", async () => {
-  if (currentPage * 40 >= totalHits) {
-    Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
-    return;
-  
-  }
-
-  currentPage++;
-  const { hits } = await fetchImages(currentQuery, currentPage);
-  displayImages(hits);
-  window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
-});
- 
