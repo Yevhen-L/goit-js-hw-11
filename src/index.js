@@ -39,9 +39,15 @@ const lightbox = new SimpleLightbox(".photo-card a",
   });
 
 // picturesFunction--------------------------
-function displayImages(images) {
-  loadMoreBtn.style.display = currentPage * 40 >= totalHits ? "none" : "block";
-  gallery.innerHTML = "";
+
+// function displayImages(images) {
+//   loadMoreBtn.style.display = currentPage * 40 >= totalHits ? "none" : "block";
+//   gallery.innerHTML = "";
+
+function displayImages(images, append = false) {
+  if (!append) {
+    gallery.innerHTML = "";
+  }
 
   images.forEach(image => {
     const card = document.createElement("div");
@@ -97,18 +103,32 @@ searchForm.addEventListener("submit", async event => {
   loadMoreBtn.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-loadMoreBtn.addEventListener("click", async () => {
-  if (currentPage * 40 >= totalHits) {
-    Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
-    return;
-    }
-  currentPage++;
-  const { hits } = await fetchImages(currentQuery, currentPage);
-  displayImages(hits);
-  window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
-});
- 
-// Button(Load more)----------------------------------------
+
+//Button(Load more) Додає по 40 + очищає-----------------------------------------------------------
+// loadMoreBtn.addEventListener("click", async () => {
+//   if (currentPage * 40 >= totalHits) {
+//     Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+//     return;
+//     }
+//   currentPage++;
+//   const { hits } = await fetchImages(currentQuery, currentPage);
+//   displayImages(hits);
+//   window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
+// });
+
+ loadMoreBtn.addEventListener("click", async () => {
+  if (currentPage * 40 < totalHits) {
+    const { hits } = await fetchImages(currentQuery, currentPage + 1);
+    displayImages(hits, true);
+    currentPage++;
+    window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
+  } else {
+    loadMoreBtn.style.display = "none";
+    Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+  }
+ });
+
+// Button(Load more) Додає і залиш чистий екран----------------------------------------
 // loadMoreBtn.addEventListener("click", async () => {
 //     currentPage++;
 //   const { hits } = await fetchImages(currentQuery, currentPage);
