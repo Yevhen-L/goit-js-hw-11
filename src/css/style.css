@@ -1,3 +1,12 @@
+/* :root { */
+/* portfolio-galary */
+/* --indent1: 20px;
+  --indent2: 24px; */
+/*kilk kartok v riadku  */
+/* --items1: 2;
+  --items2: 4;
+} */
+
 /* .container {
 
   
@@ -9,7 +18,13 @@
   gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
-  /* width: calc((100% - var(--indent1) * (var(--items3) - 1)) / var(--items3)); */
+}
+
+.photo-card {
+  min-width: 640px;
+  margin-left: 46px;
+  margin-top: 20px;
+  /* width: calc((100% - var(--indent1) * (var(--items2) - 1)) / var(--items2)); */
 }
 .info {
   display: flex;

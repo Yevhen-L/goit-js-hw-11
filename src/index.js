@@ -10,7 +10,9 @@ const apiKey = "38983317-2cdf068ca906dc85bbb8e8b48"; //ключ
 
 let currentPage = 1;
 let currentQuery = "";
+let totalHits = 0;
 
+// --------------------------------------
 
 // picturesFromServer------------------------------
 async function fetchImages(query, page = 1) {
@@ -26,7 +28,7 @@ async function fetchImages(query, page = 1) {
         per_page: 40,
       },
     });
-
+ totalHits = response.data.totalHits;
     return response.data;
   } catch (error) {
     console.error("Error fetching images:", error);
@@ -42,6 +44,7 @@ const lightbox = new SimpleLightbox(".photo-card a",
 
 // picturesFunction--------------------------
 function displayImages(images) {
+  loadMoreBtn.style.display = currentPage * 40 >= totalHits ? "none" : "block";
   gallery.innerHTML = "";
 
   images.forEach(image => {
@@ -107,14 +110,28 @@ searchForm.addEventListener("submit", async event => {
 });
 
 // Button(Load more)----------------------------------------
+// loadMoreBtn.addEventListener("click", async () => {
+//     currentPage++;
+//   const { hits } = await fetchImages(currentQuery, currentPage);
+//   displayImages(hits);
+//   window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
+//  });
+// // request--------------------------------------------------
+// fetchImages("initial search term").then(response => {
+//   displayImages(response.hits);
+//   loadMoreBtn.style.display = "none";
+// });
+
 loadMoreBtn.addEventListener("click", async () => {
+  if (currentPage * 40 >= totalHits) {
+    Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+    return;
+  
+  }
+
   currentPage++;
   const { hits } = await fetchImages(currentQuery, currentPage);
   displayImages(hits);
   window.scrollBy({ top: gallery.clientHeight, behavior: "smooth" });
 });
-// request--------------------------------------------------
-fetchImages("initial search term").then(response => {
-  displayImages(response.hits);
-  loadMoreBtn.style.display = "none";
-});
+ 
