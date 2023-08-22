@@ -2,7 +2,6 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-
 const searchForm = document.querySelector("#search-form");
 const gallery = document.querySelector(".gallery");
 const loadMoreBtn = document.querySelector(".load-more");
@@ -11,8 +10,6 @@ const apiKey = "38983317-2cdf068ca906dc85bbb8e8b48"; //ключ
 let currentPage = 1;
 let currentQuery = "";
 let totalHits = 0;
-
-// --------------------------------------
 
 // picturesFromServer------------------------------
 async function fetchImages(query, page = 1) {
@@ -81,29 +78,21 @@ function displayImages(images) {
     card.appendChild(info);
     gallery.appendChild(card);
   });
-
   // updateGalary-----------------------------------
   lightbox.refresh();
 }
-
 // --------------------------------------------------
 searchForm.addEventListener("submit", async event => {
   event.preventDefault();
-  
-  currentQuery = event.target.searchQuery.value.trim();
+    currentQuery = event.target.searchQuery.value.trim();
   currentPage = 1;
-
   if (!currentQuery) return;
-
   const { hits, totalHits } = await fetchImages(currentQuery);
-
   if (hits.length === 0) {
     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
     return;
   }
-
   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-
   displayImages(hits);
   loadMoreBtn.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
